@@ -59,6 +59,23 @@
 		select id,name,sal from students where name like #{pName} limit #{pStart},#{pPageSize}
 	</select>
 	
+	<!-- 动态sql解决不定几项条件查询问题，不用再去拼接1=1 -->
+	<select id="findByWhereWithPage" parameterType="map" resultMap="studentMap">
+		select id,name,sal from students 
+		<where>
+			<if test="pId!=null">
+				and id=#{pId}
+			</if>
+			<if test="pName!=null">
+				and name like #{pName}
+			</if>
+			<if test="pSal!=null">
+				and sal=#{pSal}
+			</if>
+		</where>
+		limit #{pStart},#{pPageSize}
+	</select>
+	
 	<!-- 更新学生 -->
 	<update id="updateStudent" parameterType="student" >
 		update students set name=#{name},sal=#{sal} where id=#{id}

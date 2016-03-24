@@ -184,6 +184,36 @@ public class StudenDao {
 		return null;
 	}
 	
+	/**
+	 * 动态sql解决不定几项条件查询问题，不用再去拼接1=1
+	 * @author L
+	 * @date 2016年3月24日
+	 * @param id id
+	 * @param name 姓名
+	 * @param sal 薪资
+	 * @param start 开始查询记录index
+	 * @param pageSize 每页查询长度
+	 * @return List<Student>
+	 */
+	private List<Student> findByWhereWithPage(Integer id,String name,Double sal,int start,int pageSize){
+		SqlSession sqlSession=null;
+		try {
+			sqlSession=MybatisUtil.getSqlSession();
+			Map<String, Object> map=new LinkedHashMap<String, Object>();
+			map.put("pId", id);
+			map.put("pName", "%"+name+"%");
+			map.put("pSal", sal);
+			map.put("pStart", start);
+			map.put("pPageSize", pageSize);
+			return sqlSession.selectList(Student.class.getName()+".findByWhereWithPage",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			MybatisUtil.closeSqlSession();
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) throws Exception {
 		StudenDao studenDao=new StudenDao();
 //		studenDao.add1();
@@ -208,24 +238,28 @@ public class StudenDao {
 		
 //		studenDao.deleteStudentByID(studenDao.findStudentByKye(2));
 		
-		System.out.println("第一页");
-		for(Student student: studenDao.findByNameWithPage("姓",0,3)){
-			System.out.println(student);
-		}
-		System.out.println("第二页");
-		for(Student student: studenDao.findByNameWithPage("姓",3,3)){
-			System.out.println(student);
-		}
-		System.out.println("第三页");
-		for(Student student: studenDao.findByNameWithPage("姓",6,3)){
-			System.out.println(student);
-		}
-		System.out.println("第四页");
-		for(Student student: studenDao.findByNameWithPage("姓",9,3)){
-			System.out.println(student);
-		}
-		System.out.println("第五页");
-		for(Student student: studenDao.findByNameWithPage("姓",12,3)){
+//		System.out.println("第一页");
+//		for(Student student: studenDao.findByNameWithPage("姓",0,3)){
+//			System.out.println(student);
+//		}
+//		System.out.println("第二页");
+//		for(Student student: studenDao.findByNameWithPage("姓",3,3)){
+//			System.out.println(student);
+//		}
+//		System.out.println("第三页");
+//		for(Student student: studenDao.findByNameWithPage("姓",6,3)){
+//			System.out.println(student);
+//		}
+//		System.out.println("第四页");
+//		for(Student student: studenDao.findByNameWithPage("姓",9,3)){
+//			System.out.println(student);
+//		}
+//		System.out.println("第五页");
+//		for(Student student: studenDao.findByNameWithPage("姓",12,3)){
+//			System.out.println(student);
+//		}
+		
+		for(Student student:studenDao.findByWhereWithPage(null,"姓",7000D,0,3)){
 			System.out.println(student);
 		}
 	}
