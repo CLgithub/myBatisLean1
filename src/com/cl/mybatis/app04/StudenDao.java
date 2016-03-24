@@ -1,6 +1,9 @@
 package com.cl.mybatis.app04;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.session.SqlSession;
@@ -80,6 +83,24 @@ public class StudenDao {
 	}
 	
 	/**
+	 * 根据id查找Student2
+	 * @author L
+	 * @date 2016年3月24日
+	 */
+	private Student findStudentByKye2(int id){
+		SqlSession sqlSession=null;
+		try {
+			sqlSession=MybatisUtil.getSqlSession();
+			return sqlSession.selectOne(Student.class.getName()+".findStudentByKye2", id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			MybatisUtil.closeSqlSession();
+		}
+		return null;
+	}
+	
+	/**
 	 * 查询所有
 	 * @author L
 	 * @date 2016年3月24日
@@ -138,12 +159,40 @@ public class StudenDao {
 		}
 	}
 	
+	/**
+	 * 带分页查询记录
+	 * @author L
+	 * @param name 
+	 * @date 2016年3月24日
+	 * @param start 开始查询记录
+	 * @param pageSize 每页查询条数
+	 */
+	private List<Student> findByNameWithPage(String name, int start,int pageSize) {
+		SqlSession sqlSession=null;
+		try {
+			sqlSession=MybatisUtil.getSqlSession();
+			Map<String, Object> map=new LinkedHashMap<String, Object>();
+			map.put("pName", "%"+name+"%");
+			map.put("pStart", start);
+			map.put("pPageSize", pageSize);
+			return sqlSession.selectList(Student.class.getName()+".findByNameWithPage",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			MybatisUtil.closeSqlSession();
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) throws Exception {
 		StudenDao studenDao=new StudenDao();
 //		studenDao.add1();
-//		studenDao.add2(new Student(6, "小黑", 7000D));
+//		for(int i=1;i<=10;i++){
+//			studenDao.add2(new Student(i, "姓名"+i, 7000D));
+//		}
 		
-//		Student student=studenDao.findStudentByKye(2);
+		
+//		Student student=studenDao.findStudentByKye2(5);
 //		System.out.println(student);
 		
 //		List<Student> list=studenDao.findAll();
@@ -157,8 +206,31 @@ public class StudenDao {
 //		studenDao.updateStudent(student);
 //		System.out.println(studenDao.findStudentByKye(1));
 		
-		studenDao.deleteStudentByID(studenDao.findStudentByKye(2));
+//		studenDao.deleteStudentByID(studenDao.findStudentByKye(2));
+		
+		System.out.println("第一页");
+		for(Student student: studenDao.findByNameWithPage("姓",0,3)){
+			System.out.println(student);
+		}
+		System.out.println("第二页");
+		for(Student student: studenDao.findByNameWithPage("姓",3,3)){
+			System.out.println(student);
+		}
+		System.out.println("第三页");
+		for(Student student: studenDao.findByNameWithPage("姓",6,3)){
+			System.out.println(student);
+		}
+		System.out.println("第四页");
+		for(Student student: studenDao.findByNameWithPage("姓",9,3)){
+			System.out.println(student);
+		}
+		System.out.println("第五页");
+		for(Student student: studenDao.findByNameWithPage("姓",12,3)){
+			System.out.println(student);
+		}
 	}
+
+	
 
 	
 

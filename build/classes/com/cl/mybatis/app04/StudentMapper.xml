@@ -9,7 +9,7 @@
 		type属性：表示实体全路径名
 		id属性：为实体与表的映射取一个唯一的编号
 	 -->
-	<resultMap type="student" id="studenMap">
+	<resultMap type="student" id="studentMap">
 		<!-- id标签:映射主键属性
 			 result标签：映射非主键属性
 		     property属性:实体的属性名
@@ -39,12 +39,24 @@
 		select * from students where id=#{id}
 	</select>
 	
+	
+	<!-- 根据id查找Student
+		mybatis会将查询出来的记录和studentMap这个id所对应的映射结果相互匹配 -->
+	<select id="findStudentByKye2" parameterType="int" resultMap="studentMap">
+		select id,name,sal from students where id=#{id}
+	</select>
+	
 	<!-- 查询所有学生 
 		理论上resultType要写List<Student>
 		但实际上只用写List中的类型即可，Student就行了
 	-->
 	<select id="findAll" resultType="student">
-		select * from students
+		select id,name,sal from students
+	</select>
+	
+	<!-- 带分页查询记录 -->
+	<select id="findByNameWithPage" parameterType="map" resultMap="studentMap">
+		select id,name,sal from students where name like #{pName} limit #{pStart},#{pPageSize}
 	</select>
 	
 	<!-- 更新学生 -->
@@ -58,6 +70,11 @@
 		delete from students where id=#{id}
 	</delete>
 	
-	
+	<!-- 
+		注意：这个insert/update/delete标签只是一个模板，在做操作时，其实是以SQL语句为核心的
+		     即在做增/删/时，insert/update/delete标签可通用，
+		     但做查询时只能用select标签
+		     我们提倡什么操作就用什么标签
+	 -->
 
 </mapper>
