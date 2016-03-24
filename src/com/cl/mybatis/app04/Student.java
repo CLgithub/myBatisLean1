@@ -48,4 +48,9 @@ public class Student {
 		this.sal = sal;
 	}
 
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", name=" + name + ", sal=" + sal + "]";
+	}
+	
 }

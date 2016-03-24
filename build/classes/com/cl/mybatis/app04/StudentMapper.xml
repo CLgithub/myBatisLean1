@@ -29,11 +29,34 @@
 		insert into students (id,name,sal) values(1,'小明',7000);
 	</insert>
 	
+	<!-- 新增学生 -->
 	<insert id="add2" parameterType="student">
-		insert into students (id,name,sal) values(#{id},#{name},#{sal})
+		insert into students(id,name,sal) values(#{id},#{name},#{sal})
 	</insert>
 	
+	<!-- 根据id查找Student -->
+	<select id="findStudentByKye" parameterType="int" resultType="student">
+		select * from students where id=#{id}
+	</select>
 	
+	<!-- 查询所有学生 
+		理论上resultType要写List<Student>
+		但实际上只用写List中的类型即可，Student就行了
+	-->
+	<select id="findAll" resultType="student">
+		select * from students
+	</select>
+	
+	<!-- 更新学生 -->
+	<update id="updateStudent" parameterType="student" >
+		update students set name=#{name},sal=#{sal} where id=#{id}
+	</update>
+	
+	
+	<!-- 根据id删除学生 -->
+	<delete id="deleteStudentByID" parameterType="student">
+		delete from students where id=#{id}
+	</delete>
 	
 	
 
